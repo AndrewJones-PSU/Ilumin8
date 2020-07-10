@@ -11,7 +11,7 @@
 #define _LIGHTSHOWS_H_
 #include <FastLED.h> // we need this library for CRGB variable type
 
-enum Shows {Null, WhiteLights, Rainbow, RainbowDrip};
+enum Shows {Null, WhiteLights, Rainbow, RainbowDrip, RGBTest};
 
 namespace Lightshows
 {

@@ -7,6 +7,7 @@
  * 
  * TODO: description may need updating in the future
  */
+
 #include <FastLED.h>				// code repository for updating lightstrips, using ver 3.3.3
 #include "commandList.h"			// enums for serial commands/options
 #include "Lightshows.h"				// seperate namespace for all our lightshow code
@@ -22,19 +23,20 @@
 
 CRGB leds[LEDS_PER_PIN * NUM_LED_PINS]; // our array of LED color values. 
 byte datastreamBuffer[256]; // buffer for storing the datastream that comes in through serial
-Shows activeShow = Shows::WhiteLights;
+Shows activeShow = Shows::RGBTest;
 
 // our list of options and whatnot
 uint8_t maxBrightness = 255;
 
 void setup() // arduino setup function, runs once at startup
 {
-	delay(500);
+	delay(400);
 	// initialize FastLED library
 	LEDS.addLeds<USED_PORT, NUM_LED_PINS, GRB>(leds, LEDS_PER_PIN);
-	LEDS.clear();
-	LEDS.setBrightness(maxBrightness);
+	LEDS.clear(true);
+	delay(100);
 	LEDS.show();
+
 
 	Serial.begin(115200);
 	while (!Serial)
@@ -45,6 +47,16 @@ void setup() // arduino setup function, runs once at startup
 	leds[1] = CRGB::Green;
 	LEDS.show();
 	Serial.flush();
+	delay(500);
+
+	Lightshows::lightshowInit(leds, LEDS_PER_PIN * NUM_LED_PINS, activeShow);
+	for(int i = 0; i < 1; i++)
+	{
+		delay(100);
+		Lightshows::updateLightshowValues(leds, LEDS_PER_PIN * NUM_LED_PINS, activeShow);
+		LEDS.show();
+	}
+	
 }
 
 void loop() // arduino loop function, runs over and over forever

@@ -16,7 +16,7 @@ void Lightshows::lightshowInit(CRGB * leds, int numLEDs, Shows currentLightshow)
 	case WhiteLights:
 		for(int i = 0; i < numLEDs; i++)
 		{
-			leds[i] = CRGB::White;
+			leds[i] = CRGB(40, 40, 40);
 		}
 		break;
 	case Rainbow:
@@ -27,6 +27,14 @@ void Lightshows::lightshowInit(CRGB * leds, int numLEDs, Shows currentLightshow)
 		for(int i = 0; i < numLEDs; i += (int)(numLEDs / 4))
 		{
 			leds[i] = CRGB::Black;
+		}
+		break;
+	case RGBTest:
+		for(int i = 0; i < numLEDs - 2; i += 3)
+		{
+			leds[i] = CRGB(40, 0, 0);
+			leds[i + 1] = CRGB(0, 40, 0);
+			leds[i + 2] = CRGB(0, 0, 40);
 		}
 		break;
 	}
@@ -40,7 +48,7 @@ void Lightshows::updateLightshowValues(CRGB * leds, int numLEDs, Shows currentLi
 	case WhiteLights:
 		for(int i = 0; i < numLEDs; i++)
 		{
-			leds[i] = CRGB::White;
+			leds[i] = CRGB(40, 40, 40);
 		}
 		break;
 	case Rainbow:
@@ -58,6 +66,17 @@ void Lightshows::updateLightshowValues(CRGB * leds, int numLEDs, Shows currentLi
 			leds[i] = leds[i + 1];
 		}
 		leds[numLEDs - 1] = temp;
+		break;
+	case RGBTest:
+		for(int i = 0; i < numLEDs - 2; i += 3)
+		{
+			leds[i] = CRGB(40, 0, 0);
+			leds[i + 1] = CRGB(0, 40, 0);
+			leds[i + 2] = CRGB(0, 0, 40);
+			// Serial.println((String)i + "\t" + (String)leds[i].r + "\t" + (String)leds[i].g + "\t" + (String)leds[i].b);
+			// Serial.println((String)(i + 1) + "\t" + (String)leds[i + 1].r + "\t" + (String)leds[i + 1].g + "\t" + (String)leds[i + 1].b);
+			// Serial.println((String)(i + 2) + "\t" + (String)leds[i + 2].r + "\t" + (String)leds[i + 2].g + "\t" + (String)leds[i + 2].b);
+		}
 		break;
 	}
 
