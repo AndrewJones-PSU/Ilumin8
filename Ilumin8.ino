@@ -38,7 +38,7 @@ void setup() // arduino setup function, runs once at startup
 	LEDS.show();
 
 
-	Serial.begin(115200);
+	Serial.begin(256000);
 	while (!Serial)
 	{
 		// waits for serial to connect
