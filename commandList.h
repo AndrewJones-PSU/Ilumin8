@@ -23,6 +23,8 @@ namespace cmds
 	#define ChangeOption (byte)4
 	#define CanWrite (byte) 253
 	#define BusyDNW (byte) 254
+
+	#define Option_SetBrightness (byte)1
 }
 
 #endif

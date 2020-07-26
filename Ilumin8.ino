@@ -25,8 +25,8 @@ CRGB leds[LEDS_PER_PIN * NUM_LED_PINS]; // our array of LED color values.
 byte datastreamBuffer[256]; // buffer for storing the datastream that comes in through serial
 Shows activeShow = Shows::RGBTest;
 
-// our list of options and whatnot
-uint8_t maxBrightness = 255;
+// our list of options and whatnot (TODO)
+
 
 void setup() // arduino setup function, runs once at startup
 {
@@ -35,6 +35,7 @@ void setup() // arduino setup function, runs once at startup
 	LEDS.addLeds<USED_PORT, NUM_LED_PINS, GRB>(leds, LEDS_PER_PIN);
 	LEDS.clear(true);
 	delay(100);
+	LEDS.setBrightness(40);
 	LEDS.show();
 
 
@@ -115,8 +116,13 @@ void handleDatastream() // manages recieving and processing a datastream
 			Lightshows::lightshowInit(leds, LEDS_PER_PIN * NUM_LED_PINS, activeShow);
 			break;
 		case ChangeOption:
-			// TODO:
-			index++;
+			switch(datastreamBuffer[index + 1])
+			{
+				case Option_SetBrightness:
+					LEDS.setBrightness(datastreamBuffer[index + 2]);
+					index += 3;
+					break;
+			}
 			break;
 		}
 	}
