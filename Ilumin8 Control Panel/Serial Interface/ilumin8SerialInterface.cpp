@@ -35,7 +35,7 @@ int run(int argc, char *argv[])
 
 	// get port number and baud rate from user
 	int portNum = 0;
-	int baudRate = 256000;
+	int baudRate = 250000;
 	bool continueFlag = true;
 	do
 	{

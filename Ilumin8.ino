@@ -39,7 +39,7 @@ void setup() // arduino setup function, runs once at startup
 	LEDS.show();
 
 
-	Serial.begin(256000);
+	Serial.begin(250000);
 	while (!Serial)
 	{
 		// waits for serial to connect
@@ -117,6 +117,7 @@ void handleDatastream() // manages recieving and processing a datastream
 			{
 				case Option_SetBrightness:
 					LEDS.setBrightness(datastreamBuffer[index + 2]);
+					Serial.write(datastreamBuffer[index + 2]);
 					index += 3;
 					break;
 			}
