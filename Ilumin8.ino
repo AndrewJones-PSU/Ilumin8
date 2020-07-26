@@ -104,9 +104,6 @@ void handleDatastream() // manages recieving and processing a datastream
 		case NULL:
 			index = 256;
 			break;
-		case Handshake: // TODO: should throw an error since handshakes shouldn't exist in the datastream
-			index++;
-			break;
 		case DatastreamStart: // TODO: should throw an error since the start of the datastream should be handled seperately
 			index++;
 			break;

@@ -8,22 +8,24 @@
  * are used and how the code on both ends interacts with these commands.
  * 
  * quick and dirty runthrough of how sending the datastream from the PC to the arduino works
- * -PC sends HANDSHAKE to arduino
- * -once arduino finishes next or current fastLED update, it responds with HANDSHAKE and clears pre-allocated memory for the datastream
- * -PC then sends DATASTREAM_START, along with an additional byte representing the size of the datastream in bytes
- * -PC then sends the datastream, no end of stream byte is sent since the arduino already knows its length and will
- * simply stop reading from serial once it's at the end. This is the end of serial transmission.
- * -arduino then interprets and executes the commands.
+ * -arduino waits for serial data
+ * -once PC sends some serial data, the arduino starts reading, also checking that the first byte is a DatastreamStart byte
+ * -the arduino reads the second byte, which defines the size of the rest of the incoming datastream in bytes
+ * -the arduino then reads the number of bytes defined in the second byte, storing them to a buffer
+ * -after reading the datastream, the arduino then processes it and updates the proper values accordingly
+ * -after processing the datastream, the arduino then writes to the lightstrips, and then updates the values of the LED array
+ * (note that an empty datastream can be sent (i.e. the 2nd byte is 0) and the arduino simply won't parse it and skip right to updating LEDs)
  */
 namespace cmds
 {
-	#define Handshake 1
+	// byte indicating the start of a datastream
 	#define DatastreamStart (byte)2
+
+	// General Commands
 	#define ChangeLightshow (byte)3
 	#define ChangeOption (byte)4
-	#define CanWrite (byte) 253
-	#define BusyDNW (byte) 254
 
+	// Option Selection, put after a ChangeOption byte
 	#define Option_SetBrightness (byte)1
 }
 
