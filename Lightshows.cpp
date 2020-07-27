@@ -18,15 +18,20 @@ Lightshows::Lightshows(CRGB * _leds, int _numLEDs, int _numLEDsPerPin, LSOptions
 	changeLightshow(Shows::RGBTest);
 }
 
+Shows Lightshows::getCurrentLightshow()
+{
+	return currentLightshow;
+}
+
 void Lightshows::changeLightshow(Shows newLightshow)
 {
 	currentLightshow = newLightshow;
 	switch (currentLightshow)
 	{
-	case WhiteLights:
+	case SolidColor:
 		for(int i = 0; i < numLEDs; i++)
 		{
-			leds[i] = CRGB::White;
+			leds[i] = lsOptions->SolidColor_Color;
 		}
 		break;
 	case Rainbow:
@@ -55,10 +60,10 @@ void Lightshows::updateLightshowValues()
 	CRGB temp = CRGB::Black;
 	switch (currentLightshow)
 	{
-	case WhiteLights:
+	case SolidColor:
 		for(int i = 0; i < numLEDs; i++)
 		{
-			leds[i] = CRGB::White;
+			leds[i] = lsOptions->SolidColor_Color;
 		}
 		break;
 	case Rainbow:

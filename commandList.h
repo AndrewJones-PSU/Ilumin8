@@ -18,15 +18,19 @@
  */
 namespace cmds
 {
-	// byte indicating the start of a datastream
+	// byte indicating the start of a datastream, followed by number of bytes in the datastream
 	#define DatastreamStart (byte)2
 
 	// General Commands
-	#define ChangeLightshow (byte)3
-	#define ChangeOption (byte)4
+	#define ChangeLightshow (byte)3 // followed by byte associated with requested lightshow
+	#define ChangeOption (byte)4 // followed by byte associated with requested option
+	#define ChangeLightshowOption (byte)5 // followed by byte associated with requested option (it is assumed that the current lightshow is the one we want to change options on)
 
 	// Option Selection, put after a ChangeOption byte
-	#define Option_SetBrightness (byte)1
+	#define Option_SetBrightness (byte)1 // followed by byte representing new max brightness
+	
+	// Option Selection for lightshow-specific options
+	#define LSOption_SolidColor_Color (byte)1 // followed by 3 bytes representing CRGB color
 }
 
 #endif

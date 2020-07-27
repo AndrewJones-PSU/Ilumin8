@@ -11,11 +11,12 @@
 #define _LIGHTSHOWS_H_
 #include <FastLED.h> // we need this library for CRGB variable type
 
-enum Shows {Null, WhiteLights, Rainbow, RainbowDrip, RGBTest}; // enum of all our lightshows
+enum Shows {Null, SolidColor, Rainbow, RainbowDrip, RGBTest}; // enum of all our lightshows
 
 // struct that stores all our options for lightshows
 struct LSOptions{
 	uint8_t maxBrightness = 40;
+	CRGB SolidColor_Color = CRGB::White;
 };
 
 class Lightshows
@@ -29,6 +30,7 @@ private:
 public:
 	Lightshows(CRGB * leds, int numLEDs, int numLEDsPerPin, LSOptions * lsOptions); // initialize the Lightshows class with necessary values and pointers
 
+	Shows getCurrentLightshow(); // returns the current lightshow
 	void changeLightshow(Shows newLightshow); // change our currently selected lightshow. Updates all necessary values in the process.
 	void updateLightshowValues(); // changes our array of LED values in preparation for the next write call.
 };

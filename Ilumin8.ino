@@ -113,6 +113,23 @@ void handleDatastream() // manages recieving and processing a datastream
 					break;
 			}
 			break;
+		case ChangeLightshowOption:
+			switch(lightshows.getCurrentLightshow())
+			{
+			case NULL: // TODO: should throw an error, not a valid state
+				index = 256;
+				break;
+			case SolidColor:
+				switch(datastreamBuffer[index + 1])
+				{
+				case LSOption_SolidColor_Color:
+					lsOptions.SolidColor_Color = CRGB(datastreamBuffer[index + 2], datastreamBuffer[index + 3], datastreamBuffer[index + 4]);
+					index += 5;
+					break;
+				}
+				break;
+			}
+			break;
 		}
 	}
 }
