@@ -4,6 +4,7 @@
 #include <string>
 #include <chrono>
 #include <future>
+#include <thread>
 
 #define DelayPeriod 12500 // delay period of writing to the serial port in microseconds, default is 12500 (80Hz)
 
@@ -98,7 +99,7 @@ int run(int argc, char *argv[])
 	// our main program loop, repeats forever until program is exited
 	while (!shouldExit)
 	{
-		while(nextRun > std::chrono::high_resolution_clock::now()) {} // wait until next output period
+		std::this_thread::sleep_for(nextRun - std::chrono::high_resolution_clock::now()); // sleep until next clock period
 		if (inputFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready) // is inputHandler done executing (or is inputHandler not initialized yet)?
 		{
 			// first byte of dataStreamBuffer is the size, copy this out first
