@@ -23,10 +23,9 @@
 
 CRGB leds[LEDS_PER_PIN * NUM_LED_PINS]; // our array of LED color values. 
 byte datastreamBuffer[256]; // buffer for storing the datastream that comes in through serial
-Shows activeShow = Shows::RGBTest;
 
-// our list of options and whatnot (TODO)
-
+LSOptions lsOptions; // our instance of the LSOptions struct
+Lightshows lightshows(&leds[0], LEDS_PER_PIN * NUM_LED_PINS, LEDS_PER_PIN, &lsOptions); // our instance of the Lightshows class
 
 void setup() // arduino setup function, runs once at startup
 {
@@ -35,9 +34,8 @@ void setup() // arduino setup function, runs once at startup
 	LEDS.addLeds<USED_PORT, NUM_LED_PINS, GRB>(leds, LEDS_PER_PIN);
 	LEDS.clear(true);
 	delay(100);
-	LEDS.setBrightness(40);
+	LEDS.setBrightness(lsOptions.maxBrightness);
 	LEDS.show();
-
 
 	Serial.begin(250000);
 	while (!Serial)
@@ -50,14 +48,8 @@ void setup() // arduino setup function, runs once at startup
 	Serial.flush();
 	delay(500);
 
-	Lightshows::lightshowInit(leds, LEDS_PER_PIN * NUM_LED_PINS, activeShow);
-	for(int i = 0; i < 1; i++)
-	{
-		delay(100);
-		Lightshows::updateLightshowValues(leds, LEDS_PER_PIN * NUM_LED_PINS, activeShow);
-		LEDS.show();
-	}
-	
+	lightshows.updateLightshowValues();
+	LEDS.show();
 }
 
 void loop() // arduino loop function, runs over and over forever
@@ -65,7 +57,7 @@ void loop() // arduino loop function, runs over and over forever
 	while(Serial.available() == 0) {}
 	handleDatastream();
 	LEDS.show();
-	Lightshows::updateLightshowValues(leds, LEDS_PER_PIN * NUM_LED_PINS, activeShow);
+	lightshows.updateLightshowValues();
 }
 
 void handleDatastream() // manages recieving and processing a datastream
@@ -108,16 +100,15 @@ void handleDatastream() // manages recieving and processing a datastream
 			index++;
 			break;
 		case ChangeLightshow:
-			activeShow = (Shows)datastreamBuffer[index + 1];
+			lightshows.changeLightshow((Shows)datastreamBuffer[index + 1]);
 			index += 2;
-			Lightshows::lightshowInit(leds, LEDS_PER_PIN * NUM_LED_PINS, activeShow);
 			break;
 		case ChangeOption:
 			switch(datastreamBuffer[index + 1])
 			{
 				case Option_SetBrightness:
-					LEDS.setBrightness(datastreamBuffer[index + 2]);
-					Serial.write(datastreamBuffer[index + 2]);
+					lsOptions.maxBrightness = datastreamBuffer[index + 2];
+					LEDS.setBrightness(lsOptions.maxBrightness);
 					index += 3;
 					break;
 			}

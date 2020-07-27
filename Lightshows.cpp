@@ -9,8 +9,18 @@
 
 #include "Lightshows.h"
 
-void Lightshows::lightshowInit(CRGB * leds, int numLEDs, Shows currentLightshow)
+Lightshows::Lightshows(CRGB * _leds, int _numLEDs, int _numLEDsPerPin, LSOptions * _lsOptions)
 {
+	leds = _leds;
+	numLEDs = _numLEDs;
+	numLEDsPerPin = _numLEDsPerPin;
+	lsOptions = _lsOptions;
+	changeLightshow(Shows::RGBTest);
+}
+
+void Lightshows::changeLightshow(Shows newLightshow)
+{
+	currentLightshow = newLightshow;
 	switch (currentLightshow)
 	{
 	case WhiteLights:
@@ -40,7 +50,7 @@ void Lightshows::lightshowInit(CRGB * leds, int numLEDs, Shows currentLightshow)
 	}
 }
 
-void Lightshows::updateLightshowValues(CRGB * leds, int numLEDs, Shows currentLightshow)
+void Lightshows::updateLightshowValues()
 {
 	CRGB temp = CRGB::Black;
 	switch (currentLightshow)
@@ -73,9 +83,6 @@ void Lightshows::updateLightshowValues(CRGB * leds, int numLEDs, Shows currentLi
 			leds[i] = CRGB::Red;
 			leds[i + 1] = CRGB::Green;
 			leds[i + 2] = CRGB::Blue;
-			// Serial.println((String)i + "\t" + (String)leds[i].r + "\t" + (String)leds[i].g + "\t" + (String)leds[i].b);
-			// Serial.println((String)(i + 1) + "\t" + (String)leds[i + 1].r + "\t" + (String)leds[i + 1].g + "\t" + (String)leds[i + 1].b);
-			// Serial.println((String)(i + 2) + "\t" + (String)leds[i + 2].r + "\t" + (String)leds[i + 2].g + "\t" + (String)leds[i + 2].b);
 		}
 		break;
 	}
