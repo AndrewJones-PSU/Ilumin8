@@ -12,6 +12,10 @@
 #include "commandList.h"			// enums for serial commands/options
 #include "Lightshows.h"				// seperate namespace for all our lightshow code
 
+// Pin Definitions and variables for optional buttons
+#define ON_OFF_TOGGLE_PIN 2			// pin that we're using for our hardware on/off toggle button
+bool onOffToggleState, onOffToggle;	// flags for indicating the current position of the toggle button and whether the lights should be on or off
+
 // Definitions for LED Strips
 // TODO: update these comments so they aren't garbage before V1 release.
 #define LEDS_PER_PIN 300			// the number of LEDS being controlled per pin. We recommend using no more than 300 LEDS per pin, as going higher may cause refresh rate issues.
@@ -29,6 +33,11 @@ Lightshows lightshows(&leds[0], LEDS_PER_PIN * NUM_LED_PINS, LEDS_PER_PIN, &lsOp
 
 void setup() // arduino setup function, runs once at startup
 {
+	// setup optional button pins (should be left here, even if not using)
+	pinMode(ON_OFF_TOGGLE_PIN, INPUT_PULLUP);
+	onOffToggleState = false;
+	onOffToggle = true;
+
 	delay(400);
 	// initialize FastLED library
 	LEDS.addLeds<USED_PORT, NUM_LED_PINS, GRB>(leds, LEDS_PER_PIN);
@@ -54,7 +63,23 @@ void setup() // arduino setup function, runs once at startup
 
 void loop() // arduino loop function, runs over and over forever
 {
-	while(Serial.available() == 0) {}
+	// handle optional input buttons while we're awaiting serial data
+	do
+	{
+		if ((bool)digitalRead(ON_OFF_TOGGLE_PIN) != onOffToggleState)
+		{
+			onOffToggleState = (bool)digitalRead(ON_OFF_TOGGLE_PIN);
+			if(!onOffToggleState)
+			{
+				onOffToggle = !onOffToggle;
+				if (onOffToggle == false)
+					LEDS.setBrightness(0);
+				else
+					LEDS.setBrightness(lsOptions.maxBrightness);
+			}
+		}
+	}
+	while(Serial.available() == 0);
 	handleDatastream();
 	LEDS.show();
 	lightshows.updateLightshowValues();
@@ -108,7 +133,8 @@ void handleDatastream() // manages recieving and processing a datastream
 			{
 				case Option_SetBrightness:
 					lsOptions.maxBrightness = datastreamBuffer[index + 2];
-					LEDS.setBrightness(lsOptions.maxBrightness);
+					if (onOffToggle == true)
+						LEDS.setBrightness(lsOptions.maxBrightness);
 					index += 3;
 					break;
 			}
@@ -133,3 +159,4 @@ void handleDatastream() // manages recieving and processing a datastream
 		}
 	}
 }
+
