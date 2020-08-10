@@ -76,6 +76,7 @@ void loop() // arduino loop function, runs over and over forever
 					LEDS.setBrightness(0);
 				else
 					LEDS.setBrightness(lsOptions.maxBrightness);
+				LEDS.show();
 			}
 		}
 	}
