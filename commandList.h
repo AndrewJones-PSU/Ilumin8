@@ -28,6 +28,7 @@ namespace cmds
 
 	// Option Selection, put after a ChangeOption byte
 	#define Option_SetBrightness (byte)1 // followed by byte representing new max brightness
+	#define Option_ToggleOnOff (byte)2 // no following args
 	
 	// Option Selection for lightshow-specific options
 	#define LSOption_SolidColor_Color (byte)1 // followed by 3 bytes representing CRGB color

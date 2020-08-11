@@ -17,6 +17,7 @@ enum Shows {Null, SolidColor, Rainbow, RainbowDrip, RGBTest}; // enum of all our
 struct LSOptions{
 	uint8_t maxBrightness = 40;
 	CRGB SolidColor_Color = CRGB::White;
+	bool onOffToggle = true;
 };
 
 class Lightshows

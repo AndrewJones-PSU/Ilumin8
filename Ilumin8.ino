@@ -14,7 +14,7 @@
 
 // Pin Definitions and variables for optional buttons
 #define ON_OFF_TOGGLE_PIN 2			// pin that we're using for our hardware on/off toggle button
-bool onOffToggleState, onOffToggle;	// flags for indicating the current position of the toggle button and whether the lights should be on or off
+bool onOffToggleState;				// flag for indicating the current position of the toggle button
 
 // Definitions for LED Strips
 // TODO: update these comments so they aren't garbage before V1 release.
@@ -36,7 +36,6 @@ void setup() // arduino setup function, runs once at startup
 	// setup optional button pins (should be left here, even if not using)
 	pinMode(ON_OFF_TOGGLE_PIN, INPUT_PULLUP);
 	onOffToggleState = false;
-	onOffToggle = true;
 
 	delay(400);
 	// initialize FastLED library
@@ -71,12 +70,7 @@ void loop() // arduino loop function, runs over and over forever
 			onOffToggleState = (bool)digitalRead(ON_OFF_TOGGLE_PIN);
 			if(!onOffToggleState)
 			{
-				onOffToggle = !onOffToggle;
-				if (onOffToggle == false)
-					LEDS.setBrightness(0);
-				else
-					LEDS.setBrightness(lsOptions.maxBrightness);
-				LEDS.show();
+				toggleOnOff();
 			}
 		}
 	}
@@ -84,6 +78,17 @@ void loop() // arduino loop function, runs over and over forever
 	handleDatastream();
 	LEDS.show();
 	lightshows.updateLightshowValues();
+}
+
+void toggleOnOff() // toggle lightstrips on and off, can be done via serial or optional hardware push-button
+{
+	lsOptions.onOffToggle = !lsOptions.onOffToggle;
+	if (lsOptions.onOffToggle == false)
+		LEDS.setBrightness(0);
+	else
+		LEDS.setBrightness(lsOptions.maxBrightness);
+	LEDS.show();
+	delayMicroseconds(1);
 }
 
 void handleDatastream() // manages recieving and processing a datastream
@@ -134,9 +139,13 @@ void handleDatastream() // manages recieving and processing a datastream
 			{
 				case Option_SetBrightness:
 					lsOptions.maxBrightness = datastreamBuffer[index + 2];
-					if (onOffToggle == true)
+					if (lsOptions.onOffToggle == true)
 						LEDS.setBrightness(lsOptions.maxBrightness);
 					index += 3;
+					break;
+				case Option_ToggleOnOff:
+					toggleOnOff();
+					index += 2;
 					break;
 			}
 			break;
@@ -160,4 +169,3 @@ void handleDatastream() // manages recieving and processing a datastream
 		}
 	}
 }
-
