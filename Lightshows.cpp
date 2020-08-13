@@ -26,6 +26,8 @@ Shows Lightshows::getCurrentLightshow()
 void Lightshows::changeLightshow(Shows newLightshow)
 {
 	currentLightshow = newLightshow;
+	int iterations = ceil(numLEDs / 100);
+	int length = ceil(numLEDs / iterations);
 	switch (currentLightshow)
 	{
 	case SolidColor:
@@ -35,13 +37,21 @@ void Lightshows::changeLightshow(Shows newLightshow)
 		}
 		break;
 	case Rainbow:
-		fill_rainbow(leds, numLEDs, 0);
+		for(int iterationNum = 0; iterationNum < iterations; iterationNum++)
+		{
+			for(int i = 0; i < length; i++)
+			{
+				hsv2rgb_rainbow(CHSV((uint8_t)((float)i / length * 255.0), 255, 255), leds[iterationNum * length + i]);
+			}
+		}
 		break;
 	case RainbowDrip:
-		fill_rainbow(leds, numLEDs, 0);
-		for(int i = 0; i < numLEDs; i += (int)(numLEDs / 4))
+		for(int iterationNum = 0; iterationNum < iterations; iterationNum++)
 		{
-			leds[i] = CRGB::Black;
+			for(int i = 0; i < length; i++)
+			{
+				hsv2rgb_rainbow(CHSV((uint8_t)((float)i / length * 255.0), 255, (uint8_t)(255 * sin((iterationNum * length + i) / 3))), leds[iterationNum * length + i]);
+			}
 		}
 		break;
 	case RGBTest:
