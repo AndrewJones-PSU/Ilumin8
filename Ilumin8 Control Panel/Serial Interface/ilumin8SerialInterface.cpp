@@ -147,6 +147,8 @@ void inputHandler(uint8_t* buffer, bool isIntegrated, bool firstRun)
 		if (!firstRun)
 			std::cout << "Ready for input, enter size of datastream followed by datastream, separate numbers with spaces. Enter \"0\" to exit program\n";
 		char userIn[1028] = "";
+		float f = 0;
+		uint8_t * fptr = NULL;
 		std::cin.getline(userIn, 1028);
 		try
 		{
@@ -154,7 +156,18 @@ void inputHandler(uint8_t* buffer, bool isIntegrated, bool firstRun)
 			int i = 0;
 			while (ptr != NULL && i <= 256)
 			{
-				buffer[i] = atoi(ptr);
+				// interpret floats as 4 bytes
+				if (strstr(ptr, ".") != NULL)
+				{
+					f = (float)atof(ptr);
+					fptr = reinterpret_cast<uint8_t *>(&f);
+					buffer[i] = fptr[0];
+					buffer[i + 1] = fptr[1];
+					buffer[i + 2] = fptr[2];
+					buffer[i + 3] = fptr[3];
+				}
+				else
+					buffer[i] = atoi(ptr);
 				ptr = strtok(NULL, " ");
 				i++;
 			}
@@ -165,5 +178,4 @@ void inputHandler(uint8_t* buffer, bool isIntegrated, bool firstRun)
 			buffer[0] = 0;
 		}
 	}
-	
 }
