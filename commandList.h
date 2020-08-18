@@ -32,6 +32,8 @@ namespace cmds
 	
 	// Option Selection for lightshow-specific options
 	#define LSOption_SolidColor_Color (byte)1 // followed by 3 bytes representing CRGB color
+	
+	#define LSOption_RainbowDrip_LengthBias (byte)1 // followed by 4 bytes representing a float
 }
 
 #endif

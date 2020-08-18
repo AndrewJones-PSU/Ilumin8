@@ -164,6 +164,17 @@ void handleDatastream() // manages recieving and processing a datastream
 					break;
 				}
 				break;
+			case Rainbow:
+				break;
+			case RainbowDrip:
+				switch(datastreamBuffer[index + 1])
+				{
+				case LSOption_RainbowDrip_LengthBias:
+					memcpy(&lsOptions.RainbowDrip_LengthBias, &datastreamBuffer[index + 2], 4);
+					index += 6;
+					break;
+				}
+
 			}
 			break;
 		}

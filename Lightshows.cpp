@@ -50,7 +50,7 @@ void Lightshows::changeLightshow(Shows newLightshow)
 		{
 			for(int i = 0; i < length; i++)
 			{
-				hsv2rgb_rainbow(CHSV((uint8_t)((float)i / length * 255.0), 255, (uint8_t)(255 * sin((iterationNum * length + i) / 2.89))), leds[iterationNum * length + i]);
+				hsv2rgb_rainbow(CHSV((uint8_t)((float)i / length * 255.0), 255, (uint8_t)(255 * sin((iterationNum * length + i) / lsOptions->RainbowDrip_LengthBias))), leds[iterationNum * length + i]);
 			}
 		}
 		break;
